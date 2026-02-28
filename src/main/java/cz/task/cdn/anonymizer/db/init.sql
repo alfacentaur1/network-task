@@ -1,11 +1,11 @@
 -- main table for raw HTTP log data
 CREATE TABLE IF NOT EXISTS http_log (
-                                        timestamp DateTime,
-                                        resource_id UInt64,
-                                        bytes_sent UInt64,
-                                        request_time_milli UInt64,
-                                        response_status UInt16,
-                                        cache_status LowCardinality(String),
+    timestamp DateTime,
+    resource_id UInt64,
+    bytes_sent UInt64,
+    request_time_milli UInt64,
+    response_status UInt16,
+    cache_status LowCardinality(String),
     method LowCardinality(String),
     remote_addr String,
     url String
@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS http_log (
 
 -- table for aggregated data, denormalized for fast querying - grafana
 CREATE TABLE IF NOT EXISTS http_log_totals (
-                                               day Date,
-                                               resource_id UInt64,
-                                               response_status UInt16,
-                                               cache_status LowCardinality(String),
+    day Date,
+    resource_id UInt64,
+    response_status UInt16,
+    cache_status LowCardinality(String),
     remote_addr String,
     total_bytes_sent UInt64,
     total_requests UInt64
