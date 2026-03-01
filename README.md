@@ -22,6 +22,7 @@ Bottleneck tady vidím v handlování neposlání zpráv, v nějakých situacíc
 ### Datový model a optimalizace (ClickHouse)
 
 Mám to realizované přes init SQL script, který vytváří tabulku podle dané struktury, poté tabulku pro agregaci a view pro rychlejší queries, ale o tom níže. První myšlenkový postup byl, že pošlu script na vytváření přes HTTP nginx, ale to by byly 3 separátní requesty a trvalo by 4 minuty, než by byly uložená první data. Potom jsem se to pokoušel odeslat jako 1 požadavek s multiquery, ale to mi odmítal clickhouse. Nakonec jsem vytvořil SQL script a dal to dockeru jako volume pro clickhouse server.
+Zjistil jsem, že konfigurace volume dockeru vyžaduje relativní path, jinak mi docker vytvářel prázdné složky.
 Enginy pro tabulky: 
 MergeTree - rychlé seřazení, single source of truth
 SummingMergeTree - kvůli optimalizaci, sečítá data dohromady - např při 2 stejných údajích.
@@ -53,6 +54,6 @@ Předpoklad: agregační faktor 20:1
 Což je 2,6 GB / měsíc.
 
 ### Závěrečné poznámky
-Latence dat je v současné době 65 sekund, kvůli cooldownu na processing metodě a nginx rate. Riziko ztráty dat je díky manuálnímu potvrzování minimální, akorát je nebezpečí uváznutí v kruhu - možnost použití např. circuit breaker patternu. Momentální přepisování funguje pouze pro IPv4.
+Latence dat je v současné době 65 sekund, kvůli cooldownu na processing metodě a nginx rate. Riziko ztráty dat je díky manuálnímu potvrzování minimální, akorát je nebezpečí uváznutí v kruhu - možnost použití např. circuit breaker patternu nebo dead letter topic, kam by se ty zprávy odložily. Momentální přepisování funguje pouze pro IPv4.
 
 
