@@ -51,7 +51,7 @@ Předpokládejme, že každý log zabere 15 bajtů. To je 38,9 GB / měsíc.
 
 Předpoklad: agregační faktor 20:1
 
-Což je 2,6 GB / měsíc.
+Což je 1,9 GB / měsíc.
 
 ### Závěrečné poznámky
 Latence dat je v současné době 65 sekund, kvůli cooldownu na processing metodě a nginx rate. Riziko ztráty dat je díky manuálnímu potvrzování minimální, akorát je nebezpečí uváznutí v kruhu - možnost použití např. circuit breaker patternu nebo dead letter topic, kam by se ty zprávy odložily. Momentální přepisování funguje pouze pro IPv4.
