@@ -97,9 +97,12 @@ services:
       - broker
 
   clickhouse-server:
-    image: yandex/clickhouse-server
+    image: clickhouse/clickhouse-server:latest
     volumes:
-      - ./clickhouse-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password123
     ports:
       - "8123:8123"
       - "9000:9000"
@@ -126,7 +129,7 @@ services:
     restart: always
     environment:
       KAFKA_BOOTSTRAP_SERVERS: "broker:29092"
-      KAFKA_PRODUCER_DELAY_MS: 50000
+      KAFKA_PRODUCER_DELAY_MS: 500
     depends_on:
       - broker
     container_name: log-producer

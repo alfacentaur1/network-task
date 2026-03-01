@@ -1,4 +1,4 @@
-package cz.task.cdn.lifecycle;
+package cz.task.cdn.anonymizer.lifecycle;
 
 import cz.task.cdn.anonymizer.service.AnonymizerService;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +49,10 @@ public class KafkaConsumerLifecycleManager implements SmartLifecycle {
         return isRunning;
     }
 
-    //max value for stopping first - bcs spring is stopping first things with higher phase value
+    //max value for stopping after kafka, kafka has maxvalue -100, we want to stop after that, so we use maxvalue - 200 to be safe
     @Override
     public int getPhase() {
-        return Integer.MAX_VALUE;
+        return Integer.MAX_VALUE - 200;
     }
 
     @Override

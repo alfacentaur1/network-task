@@ -11,6 +11,7 @@ import org.capnproto.MessageReader;
 import org.capnproto.Serialize;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
@@ -71,12 +72,18 @@ public class AnonymizerService {
             //clickhouse expects application/json and each row as a separate line for JSONEachRow format
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("X-ClickHouse-User", "default");
+            headers.set("X-ClickHouse-Key", "password123");
             //set by parameters to url
             String url = "http://localhost:8124/?query=INSERT INTO http_logs FORMAT JSONEachRow";
             //send it as resttemplate post request to nginx
             HttpEntity<String> entity = new HttpEntity<>(sb.toString(), headers);
-            restTemplate.postForObject(url, entity, String.class);
-
+            restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    entity,
+                    String.class
+            );
             batch.forEach(item -> item.getAck().acknowledge());
             log.info("Batch sent(RestTemplate): {} records.", batch.size());
 
